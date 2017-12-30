@@ -1,6 +1,6 @@
 var numOfCol = 8,
 numOfRow = 8,
-WHITE_TEAM = new Array(),
+WHITE_TEAM = new Array(1),
 BLACK_TEAM = new Array(),
 ctx = null,
 Board = null,
@@ -12,15 +12,12 @@ whiteSquare = '#ffffff'
 outLine = '#fb0006';
 
 var positionsOfPieces = null,
-selectPiece = null,
+selectedPiece = null,
 IN_PLAY = 0,
 TAKEN = 1,
 black_team = 0;
 white_team = 1;
 currentTurn = WHITE_TEAM;
-
-var test;
-
 
 
 
@@ -41,61 +38,53 @@ function draw()
 
 		//creates all pieces
 		CreatePieces();
-		/*
-		var test = WHITE_TEAM[0];
-		console.log(test);
-		test.img = WHITE_TEAM[0].img;
-		console.log(test.img);
-		WHITE_TEAM[0]
-		test.img.onload = function ()
-		{
-			console.log(test);
-			ctx.drawImage(test.img, 0, 0);
-			console.log(test.img);
-		};*/
 
-		WHITE_TEAM[1].img.onload = function(){
-			ctx.drawImage(WHITE_TEAM[1].img,// WHITE_TEAM[1].row, WHITE_TEAM[1].col * 100);
-		}
+		//Renders all pieces
+		Render();
 
-		// push sick code ;)
-		//Render();
+	// when canvas is clicked, calls handleClick function
+	c.addEventListener('click', handleClick);
 
-
-		//all of the black Pieces being set to a new image using the image array above
-		//PrintPieces();
-
-		//bRook = new Image();
-		//bRook.src = chessImages[8];
-		//bRook.onload = drawPieces;
-
-
-		// when canvas is clicked, calls handleClick function
-		c.addEventListener('click', handleClick);
-
-	}else {
-		alert("Canvas is not supported")
-	}
+}else {
+	alert("Canvas is not supported")
+}
 
 }
 
 function Render()
 {
-	 for(i = 0; i < 1; i++){
-		 WHITE_TEAM[i].img.onload = function(){
+	var pieceCounter;
+	//Goes through the entire array and renders the img,row(y) and collums(x);
+	WHITE_TEAM.forEach( function (piece)
+	{
+		var WP = piece;
 
-			 ctx.drawImage(WHITE_TEAM[i].img, WHITE_TEAM[i].row, WHITE_TEAM[i].col);
-		 }
-	 }
-}
-function getImageCoords(pieceCode, bBlackTeam) {
+		piece.img.onload = function()
+		{
+			ctx.drawImage(WP.img, WP.row * BLOCK_SIZE, WP.col * BLOCK_SIZE);
+		}
 
-	var imageCoords =  {
-		"x": pieceCode * BLOCK_SIZE,
-		"y": (bBlackTeam ? 0 : BLOCK_SIZE)
-	};
 
-	return imageCoords;
+	});
+
+
+	BLACK_TEAM.forEach( function (piece)
+	{
+		var BP = piece;
+
+		piece.img.onload = function()
+		{
+			ctx.drawImage(BP.img, BP.row * BLOCK_SIZE, BP.col * BLOCK_SIZE);
+		}
+
+
+
+	});
+
+
+
+
+
 }
 
 function DrawBoard()
@@ -163,108 +152,96 @@ function DrawBoard()
 			this.img.src = imgSrc;
 		}
 	}
+	function screenToBlock(x, y) {
+		var block =  {
+			"row": Math.floor(y / BLOCK_SIZE),
+			"col": Math.floor(x / BLOCK_SIZE)
+		};
+
+		return block;
+	}
 
 	//creates all pieces starting position, status and piece name e.g. whiteRook
 	function CreatePieces()
 	{
 		//Creates White pieces
-		var whiteLRook = new Piece("whiteLRook", 0, 0, IN_PLAY, 'whiteRook.png');
-		var whiteRRook = new Piece("whiteRRook", 0, 7, IN_PLAY, 'whiteRook.png');
+		//new piece = name, row(y), col(x), status, img name location
+		var whiteLRook = new Piece("whiteLRook", 0, 7, IN_PLAY, 'whiteRook.png');
+		var whiteRRook = new Piece("whiteRRook", 7, 7, IN_PLAY, 'whiteRook.png');
 
-		var whiteLKnight = new Piece("whiteLKnight", 0, 1, IN_PLAY, 'whiteKnight.png');
-		var whiteRKnight = new Piece("whiterRKnight", 0, 6, IN_PLAY, 'whiteKnight.png');
+		var whiteLKnight = new Piece("whiteLKnight", 1, 7, IN_PLAY, 'whiteKnight.png');
+		var whiteRKnight = new Piece("whiterRKnight", 6, 7, IN_PLAY, 'whiteKnight.png');
 
-		var whiteLBishop = new Piece("whiteLBishop", 0, 2, IN_PLAY, 'whiteBishop.png');
-		var whiteRBishop = new Piece("whiteRBishop", 0, 5, IN_PLAY, 'whiteBishop.png');
+		var whiteLBishop = new Piece("whiteLBishop", 2, 7, IN_PLAY, 'whiteBishop.png');
+		var whiteRBishop = new Piece("whiteRBishop", 5, 7, IN_PLAY, 'whiteBishop.png');
 
-		var whiteQueen = new Piece("whiteQueen", 0, 4, IN_PLAY, 'whiteQueen.png');
-		var whiteKing = new Piece("whiteKing", 0, 3, IN_PLAY, 'whiteKing.png');
+		var whiteQueen = new Piece("whiteQueen", 3, 7, IN_PLAY, 'whiteQueen.png');
+		var whiteKing = new Piece("whiteKing", 4, 7, IN_PLAY, 'whiteKing.png');
 
-		var whitePawn1 = new Piece("whitePawn1", 1, 0, IN_PLAY, 'whitePawn.png');
-		var whitePawn2 = new Piece("whitePawn2", 1, 1, IN_PLAY, 'whitePawn.png');
-		var whitePawn3 = new Piece("whitePawn3", 1, 2, IN_PLAY, 'whitePawn.png');
-		var whitePawn4 = new Piece("whitePawn4", 1, 3, IN_PLAY, 'whitePawn.png');
-		var whitePawn5 = new Piece("whitePawn5", 1, 4, IN_PLAY, 'whitePawn.png');
-		var whitePawn6 = new Piece("whitePawn6", 1, 5, IN_PLAY, 'whitePawn.png');
-		var whitePawn7 = new Piece("whitePawn7", 1, 6, IN_PLAY, 'whitePawn.png');
-		var whitePawn8 = new Piece("whitePawn8", 1, 7, IN_PLAY, 'whitePawn.png');
+		var whitePawn1 = new Piece("whitePawn1", 0, 6, IN_PLAY, 'whitePawn.png');
+		var whitePawn2 = new Piece("whitePawn2", 1, 6, IN_PLAY, 'whitePawn.png');
+		var whitePawn3 = new Piece("whitePawn3", 2, 6, IN_PLAY, 'whitePawn.png');
+		var whitePawn4 = new Piece("whitePawn4", 3, 6, IN_PLAY, 'whitePawn.png');
+		var whitePawn5 = new Piece("whitePawn5", 4, 6, IN_PLAY, 'whitePawn.png');
+		var whitePawn6 = new Piece("whitePawn6", 5, 6, IN_PLAY, 'whitePawn.png');
+		var whitePawn7 = new Piece("whitePawn7", 6, 6, IN_PLAY, 'whitePawn.png');
+		var whitePawn8 = new Piece("whitePawn8", 7, 6, IN_PLAY, 'whitePawn.png');
 
 		//Creates Black pieces
-		var blackLRook = new Piece("blackLRook", 7, 0, IN_PLAY, 'blackRook.png');
-		var blackRRook = new Piece("blackRRook", 7, 7, IN_PLAY, 'blackRook.png');
+		var blackLRook = new Piece("blackLRook", 0, 0, IN_PLAY, 'blackRook.png');
+		var blackRRook = new Piece("blackRRook", 7, 0, IN_PLAY, 'blackRook.png');
 
-		var blackLKnight = new Piece("blackLKnight", 7, 1, IN_PLAY, 'blackKnight.png');
-		var blackRKnight = new Piece("blackRKnight", 7, 6, IN_PLAY, 'blackKnight.png');
+		var blackLKnight = new Piece("blackLKnight", 6, 0, IN_PLAY, 'blackKnight.png');
+		var blackRKnight = new Piece("blackRKnight", 1, 0, IN_PLAY, 'blackKnight.png');
 
-		var blackLBishop = new Piece("blackLBishop", 7, 2, IN_PLAY, 'blackBishop.png');
-		var blackRBishop = new Piece("blackRBishop", 7, 5, IN_PLAY, 'blackBishop.png');
+		var blackLBishop = new Piece("blackLBishop", 5, 0, IN_PLAY, 'blackBishop.png');
+		var blackRBishop = new Piece("blackRBishop", 2, 0, IN_PLAY, 'blackBishop.png');
 
-		var blackQueen = new Piece("blackQueen", 7, 4, IN_PLAY, 'blackQueen.png');
-		var blackKing = new Piece("blackKing", 7, 3, IN_PLAY, 'blackKing.png');
+		var blackQueen = new Piece("blackQueen", 3, 0, IN_PLAY, 'blackQueen.png');
+		var blackKing = new Piece("blackKing", 4, 0, IN_PLAY, 'blackKing.png');
 
-		var blackPawn1 = new Piece("blackPawn1", 6, 0, IN_PLAY, 'blackPawn.png');
-		var blackPawn2 = new Piece("blackPawn2", 6, 1, IN_PLAY, 'blackPawn.png');
-		var blackPawn3 = new Piece("blackPawn3", 6, 2, IN_PLAY, 'blackPawn.png');
-		var blackPawn4 = new Piece("blackPawn4", 6, 3, IN_PLAY, 'blackPawn.png');
-		var blackPawn5 = new Piece("blackPawn5", 6, 4, IN_PLAY, 'blackPawn.png');
-		var blackPawn6 = new Piece("blackPawn6", 6, 5, IN_PLAY, 'blackPawn.png');
-		var blackPawn7 = new Piece("blackPawn7", 6, 6, IN_PLAY, 'blackPawn.png');
-		var blackPawn8 = new Piece("blackPawn8", 6, 7, IN_PLAY, 'blackPawn.png');
+		var blackPawn1 = new Piece("blackPawn1", 0, 1, IN_PLAY, 'blackPawn.png');
+		var blackPawn2 = new Piece("blackPawn2", 1, 1, IN_PLAY, 'blackPawn.png');
+		var blackPawn3 = new Piece("blackPawn3", 2, 1, IN_PLAY, 'blackPawn.png');
+		var blackPawn4 = new Piece("blackPawn4", 3, 1, IN_PLAY, 'blackPawn.png');
+		var blackPawn5 = new Piece("blackPawn5", 4, 1, IN_PLAY, 'blackPawn.png');
+		var blackPawn6 = new Piece("blackPawn6", 5, 1, IN_PLAY, 'blackPawn.png');
+		var blackPawn7 = new Piece("blackPawn7", 6, 1, IN_PLAY, 'blackPawn.png');
+		var blackPawn8 = new Piece("blackPawn8", 7, 1, IN_PLAY, 'blackPawn.png');
 
+		//pushes all created pieces to white or black team
 		WHITE_TEAM.push(whiteLRook, whiteRRook, whiteLKnight, whiteRKnight, whiteLBishop, whiteRBishop, whiteQueen, whiteKing, whitePawn1, whitePawn2, whitePawn3, whitePawn4, whitePawn5, whitePawn6, whitePawn7, whitePawn8);
 
 		BLACK_TEAM.push(blackLRook, blackRRook, blackLKnight, blackRKnight, blackLBishop, blackRBishop, blackQueen, blackKing, blackPawn1, blackPawn2, blackPawn3, blackPawn4, blackPawn5, blackPawn6, blackPawn7, blackPawn8);
 
 	}
 
-	function screenToBlock(x, y) {
-		var block =  {
-			"row": Math.floor(y / BLOCK_SIZE),
-			"col": Math.floor(x / BLOCK_SIZE)
-		};
-		return block;
-	}
-
-
-function drawPieces()
+function handleClick(e)
 {
 
+	var x = e.clientX - canvas.offsetLeft,
+	y = e.clientY - canvas.offsetTop,
+	clickedSquare = screenToBlock(x, y);
 
+	console.log(clickedSquare);
+	movePiece();
+
+	/*if (selectPiece == null)
+	{
+		isPieceClicked(clickedSquare);
+	}else
+	{
+		//processMove(clickedSquare);
+	}*/
+
+	//when clicked, it posts the x and y coordinates
 
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+function movePiece(clickedSquare)
+{
+	drawSquare(selectedPiece.col, selectedPiece.row);
+}
 
 
 
@@ -284,42 +261,3 @@ function getPieceAtSquare(clickedSquare)
 
 	return getPieceAtSquareForTeam;
 }
-
-function handleClick(e)
-{
-	// or show available squares -> click on allowed square and draw png there
-	// delete old one obvsly
-	var x = e.clientX - canvas.offsetLeft,
-			y = e.clientY - canvas.offsetTop,
-	clickedSquare = screenToBlock(x, y);
-
-	if (selectPiece == null)
-	{
-
-		//isPieceClicked(clickedSquare);
-	}else
-	{
-		//processMove(clickedSquare);
-	}
-
-	//when clicked, it posts the x and y coordinates
-
-}
-//TODO: finish setting up the board array with rows and collumns
-/*function setUpBoard()
-{
-Board = new Array(8);
-for (var i = 0; i < 8; i++)
-{
-Board[i] = new Array(8);
-}
-
-for (var p  = 0; p < 8; p++)
-{
-for (var q = 0; q < 8; q++)
-{
-
-}
-}
-}
-*/
