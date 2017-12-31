@@ -15,8 +15,8 @@ var positionsOfPieces = null,
 selectedPiece = null,
 IN_PLAY = 0,
 TAKEN = 1,
-black_team = 0;
-white_team = 1;
+blackTurn = 0;
+whiteTurn = 1;
 currentTurn = WHITE_TEAM;
 
 
@@ -61,7 +61,8 @@ function Render()
 
 		piece.img.onload = function()
 		{
-			ctx.drawImage(WP.img, WP.row * BLOCK_SIZE, WP.col * BLOCK_SIZE);
+			ctx.drawImage(WP.img, WP.col * BLOCK_SIZE, WP.row * BLOCK_SIZE);
+
 		}
 
 
@@ -74,7 +75,7 @@ function Render()
 
 		piece.img.onload = function()
 		{
-			ctx.drawImage(BP.img, BP.row * BLOCK_SIZE, BP.col * BLOCK_SIZE);
+			ctx.drawImage(BP.img, BP.col * BLOCK_SIZE, BP.row * BLOCK_SIZE);
 		}
 
 
@@ -100,6 +101,8 @@ function DrawBoard()
 	ctx.strokeRect(0, 0,
 		numOfRow * BLOCK_SIZE,
 		numOfCol * BLOCK_SIZE);
+
+
 	}
 
 
@@ -166,48 +169,48 @@ function DrawBoard()
 	{
 		//Creates White pieces
 		//new piece = name, row(y), col(x), status, img name location
-		var whiteLRook = new Piece("whiteLRook", 0, 7, IN_PLAY, 'whiteRook.png');
-		var whiteRRook = new Piece("whiteRRook", 7, 7, IN_PLAY, 'whiteRook.png');
+		var whiteLRook = new Piece("whiteLRook", 0, 0, IN_PLAY, 'whiteRook.png');
+		var whiteRRook = new Piece("whiteRRook", 0, 7, IN_PLAY, 'whiteRook.png');
 
-		var whiteLKnight = new Piece("whiteLKnight", 1, 7, IN_PLAY, 'whiteKnight.png');
-		var whiteRKnight = new Piece("whiterRKnight", 6, 7, IN_PLAY, 'whiteKnight.png');
+		var whiteLKnight = new Piece("whiteLKnight", 0, 1, IN_PLAY, 'whiteKnight.png');
+		var whiteRKnight = new Piece("whiterRKnight", 0, 6, IN_PLAY, 'whiteKnight.png');
 
-		var whiteLBishop = new Piece("whiteLBishop", 2, 7, IN_PLAY, 'whiteBishop.png');
-		var whiteRBishop = new Piece("whiteRBishop", 5, 7, IN_PLAY, 'whiteBishop.png');
+		var whiteLBishop = new Piece("whiteLBishop", 0, 2, IN_PLAY, 'whiteBishop.png');
+		var whiteRBishop = new Piece("whiteRBishop", 0, 5, IN_PLAY, 'whiteBishop.png');
 
-		var whiteQueen = new Piece("whiteQueen", 3, 7, IN_PLAY, 'whiteQueen.png');
-		var whiteKing = new Piece("whiteKing", 4, 7, IN_PLAY, 'whiteKing.png');
+		var whiteQueen = new Piece("whiteQueen", 0, 3, IN_PLAY, 'whiteQueen.png');
+		var whiteKing = new Piece("whiteKing", 0, 4, IN_PLAY, 'whiteKing.png');
 
-		var whitePawn1 = new Piece("whitePawn1", 0, 6, IN_PLAY, 'whitePawn.png');
-		var whitePawn2 = new Piece("whitePawn2", 1, 6, IN_PLAY, 'whitePawn.png');
-		var whitePawn3 = new Piece("whitePawn3", 2, 6, IN_PLAY, 'whitePawn.png');
-		var whitePawn4 = new Piece("whitePawn4", 3, 6, IN_PLAY, 'whitePawn.png');
-		var whitePawn5 = new Piece("whitePawn5", 4, 6, IN_PLAY, 'whitePawn.png');
-		var whitePawn6 = new Piece("whitePawn6", 5, 6, IN_PLAY, 'whitePawn.png');
-		var whitePawn7 = new Piece("whitePawn7", 6, 6, IN_PLAY, 'whitePawn.png');
-		var whitePawn8 = new Piece("whitePawn8", 7, 6, IN_PLAY, 'whitePawn.png');
+		var whitePawn1 = new Piece("whitePawn1", 1, 0, IN_PLAY, 'whitePawn.png');
+		var whitePawn2 = new Piece("whitePawn2", 1, 1, IN_PLAY, 'whitePawn.png');
+		var whitePawn3 = new Piece("whitePawn3", 1, 2, IN_PLAY, 'whitePawn.png');
+		var whitePawn4 = new Piece("whitePawn4", 1, 3, IN_PLAY, 'whitePawn.png');
+		var whitePawn5 = new Piece("whitePawn5", 1, 4, IN_PLAY, 'whitePawn.png');
+		var whitePawn6 = new Piece("whitePawn6", 1, 5, IN_PLAY, 'whitePawn.png');
+		var whitePawn7 = new Piece("whitePawn7", 1, 6, IN_PLAY, 'whitePawn.png');
+		var whitePawn8 = new Piece("whitePawn8", 1, 7, IN_PLAY, 'whitePawn.png');
 
 		//Creates Black pieces
-		var blackLRook = new Piece("blackLRook", 0, 0, IN_PLAY, 'blackRook.png');
-		var blackRRook = new Piece("blackRRook", 7, 0, IN_PLAY, 'blackRook.png');
+		var blackLRook = new Piece("blackLRook", 7, 0, IN_PLAY, 'blackRook.png');
+		var blackRRook = new Piece("blackRRook", 7, 7, IN_PLAY, 'blackRook.png');
 
-		var blackLKnight = new Piece("blackLKnight", 6, 0, IN_PLAY, 'blackKnight.png');
-		var blackRKnight = new Piece("blackRKnight", 1, 0, IN_PLAY, 'blackKnight.png');
+		var blackLKnight = new Piece("blackLKnight", 7, 1, IN_PLAY, 'blackKnight.png');
+		var blackRKnight = new Piece("blackRKnight", 7, 6, IN_PLAY, 'blackKnight.png');
 
-		var blackLBishop = new Piece("blackLBishop", 5, 0, IN_PLAY, 'blackBishop.png');
-		var blackRBishop = new Piece("blackRBishop", 2, 0, IN_PLAY, 'blackBishop.png');
+		var blackLBishop = new Piece("blackLBishop", 7, 2, IN_PLAY, 'blackBishop.png');
+		var blackRBishop = new Piece("blackRBishop", 7, 5, IN_PLAY, 'blackBishop.png');
 
-		var blackQueen = new Piece("blackQueen", 3, 0, IN_PLAY, 'blackQueen.png');
-		var blackKing = new Piece("blackKing", 4, 0, IN_PLAY, 'blackKing.png');
+		var blackQueen = new Piece("blackQueen", 7, 3, IN_PLAY, 'blackQueen.png');
+		var blackKing = new Piece("blackKing", 7, 4, IN_PLAY, 'blackKing.png');
 
-		var blackPawn1 = new Piece("blackPawn1", 0, 1, IN_PLAY, 'blackPawn.png');
-		var blackPawn2 = new Piece("blackPawn2", 1, 1, IN_PLAY, 'blackPawn.png');
-		var blackPawn3 = new Piece("blackPawn3", 2, 1, IN_PLAY, 'blackPawn.png');
-		var blackPawn4 = new Piece("blackPawn4", 3, 1, IN_PLAY, 'blackPawn.png');
-		var blackPawn5 = new Piece("blackPawn5", 4, 1, IN_PLAY, 'blackPawn.png');
-		var blackPawn6 = new Piece("blackPawn6", 5, 1, IN_PLAY, 'blackPawn.png');
-		var blackPawn7 = new Piece("blackPawn7", 6, 1, IN_PLAY, 'blackPawn.png');
-		var blackPawn8 = new Piece("blackPawn8", 7, 1, IN_PLAY, 'blackPawn.png');
+		var blackPawn1 = new Piece("blackPawn1", 6, 0, IN_PLAY, 'blackPawn.png');
+		var blackPawn2 = new Piece("blackPawn2", 6, 1, IN_PLAY, 'blackPawn.png');
+		var blackPawn3 = new Piece("blackPawn3", 6, 2, IN_PLAY, 'blackPawn.png');
+		var blackPawn4 = new Piece("blackPawn4", 6, 3, IN_PLAY, 'blackPawn.png');
+		var blackPawn5 = new Piece("blackPawn5", 6, 4, IN_PLAY, 'blackPawn.png');
+		var blackPawn6 = new Piece("blackPawn6", 6, 5, IN_PLAY, 'blackPawn.png');
+		var blackPawn7 = new Piece("blackPawn7", 6, 6, IN_PLAY, 'blackPawn.png');
+		var blackPawn8 = new Piece("blackPawn8", 6, 7, IN_PLAY, 'blackPawn.png');
 
 		//pushes all created pieces to white or black team
 		WHITE_TEAM.push(whiteLRook, whiteRRook, whiteLKnight, whiteRKnight, whiteLBishop, whiteRBishop, whiteQueen, whiteKing, whitePawn1, whitePawn2, whitePawn3, whitePawn4, whitePawn5, whitePawn6, whitePawn7, whitePawn8);
@@ -240,7 +243,8 @@ function handleClick(e)
 
 function movePiece(clickedSquare)
 {
-	drawSquare(selectedPiece.col, selectedPiece.row);
+
+
 }
 
 
