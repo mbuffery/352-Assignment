@@ -1,7 +1,8 @@
 var numOfCol = 8,
 numOfRow = 8,
-WHITE_TEAM = new Array(1),
+WHITE_TEAM = new Array(),
 BLACK_TEAM = new Array(),
+allPieces = new Array(),
 ctx = null,
 Board = null,
 BLOCK_SIZE = 100;
@@ -15,12 +16,12 @@ var positionsOfPieces = null,
 selectedPiece = null,
 IN_PLAY = 0,
 TAKEN = 1,
-blackTurn = 0;
-whiteTurn = 1;
-currentTurn = WHITE_TEAM;
+blackTurn = 0,
+whiteTurn = 1,
+SELECT_LINE_WIDTH = 5,
+currentTurn = "White Turn";
 
-
-
+var currTurn = 1; // 0 | 1
 
 function draw()
 {
@@ -42,18 +43,25 @@ function draw()
 		//Renders all pieces
 		Render();
 
-	// when canvas is clicked, calls handleClick function
-	c.addEventListener('click', handleClick);
 
-}else {
-	alert("Canvas is not supported")
-}
+
+
+		//document.getElementById("teamTurn").innerHTML = currentTurn;
+
+		// when canvas is clicked, calls handleClick function
+		c.addEventListener('click', handleClick);
+
+	}else
+	{
+		alert("Canvas is not supported")
+	}
 
 }
 
 function Render()
 {
-	var pieceCounter;
+	var WP;
+	var BP;
 	//Goes through the entire array and renders the img,row(y) and collums(x);
 	WHITE_TEAM.forEach( function (piece)
 	{
@@ -62,12 +70,10 @@ function Render()
 		piece.img.onload = function()
 		{
 			ctx.drawImage(WP.img, WP.col * BLOCK_SIZE, WP.row * BLOCK_SIZE);
-
 		}
-
+		allPieces.push(WP);
 
 	});
-
 
 	BLACK_TEAM.forEach( function (piece)
 	{
@@ -77,15 +83,8 @@ function Render()
 		{
 			ctx.drawImage(BP.img, BP.col * BLOCK_SIZE, BP.row * BLOCK_SIZE);
 		}
-
-
-
+		allPieces.push(BP);
 	});
-
-
-
-
-
 }
 
 function DrawBoard()
@@ -101,8 +100,6 @@ function DrawBoard()
 	ctx.strokeRect(0, 0,
 		numOfRow * BLOCK_SIZE,
 		numOfCol * BLOCK_SIZE);
-
-
 	}
 
 
@@ -173,13 +170,13 @@ function DrawBoard()
 		var whiteRRook = new Piece("whiteRRook", 0, 7, IN_PLAY, 'whiteRook.png');
 
 		var whiteLKnight = new Piece("whiteLKnight", 0, 1, IN_PLAY, 'whiteKnight.png');
-		var whiteRKnight = new Piece("whiterRKnight", 0, 6, IN_PLAY, 'whiteKnight.png');
+		var whiteRKnight = new Piece("whiteRKnight", 0, 6, IN_PLAY, 'whiteKnight.png');
 
 		var whiteLBishop = new Piece("whiteLBishop", 0, 2, IN_PLAY, 'whiteBishop.png');
 		var whiteRBishop = new Piece("whiteRBishop", 0, 5, IN_PLAY, 'whiteBishop.png');
 
-		var whiteQueen = new Piece("whiteQueen", 0, 3, IN_PLAY, 'whiteQueen.png');
-		var whiteKing = new Piece("whiteKing", 0, 4, IN_PLAY, 'whiteKing.png');
+		var whiteQueen = new Piece("whiteQueen", 0, 4, IN_PLAY, 'whiteQueen.png');
+		var whiteKing = new Piece("whiteKing", 0, 3, IN_PLAY, 'whiteKing.png');
 
 		var whitePawn1 = new Piece("whitePawn1", 1, 0, IN_PLAY, 'whitePawn.png');
 		var whitePawn2 = new Piece("whitePawn2", 1, 1, IN_PLAY, 'whitePawn.png');
@@ -200,8 +197,8 @@ function DrawBoard()
 		var blackLBishop = new Piece("blackLBishop", 7, 2, IN_PLAY, 'blackBishop.png');
 		var blackRBishop = new Piece("blackRBishop", 7, 5, IN_PLAY, 'blackBishop.png');
 
-		var blackQueen = new Piece("blackQueen", 7, 3, IN_PLAY, 'blackQueen.png');
-		var blackKing = new Piece("blackKing", 7, 4, IN_PLAY, 'blackKing.png');
+		var blackQueen = new Piece("blackQueen", 7, 4, IN_PLAY, 'blackQueen.png');
+		var blackKing = new Piece("blackKing", 7, 3, IN_PLAY, 'blackKing.png');
 
 		var blackPawn1 = new Piece("blackPawn1", 6, 0, IN_PLAY, 'blackPawn.png');
 		var blackPawn2 = new Piece("blackPawn2", 6, 1, IN_PLAY, 'blackPawn.png');
@@ -219,49 +216,106 @@ function DrawBoard()
 
 	}
 
-function handleClick(e)
-{
-
-	var x = e.clientX - canvas.offsetLeft,
-	y = e.clientY - canvas.offsetTop,
-	clickedSquare = screenToBlock(x, y);
-
-	console.log(clickedSquare);
-	movePiece();
-
-	/*if (selectPiece == null)
+	function handleClick(e)
 	{
-		isPieceClicked(clickedSquare);
-	}else
+
+		var x = e.clientX - canvas.offsetLeft,
+		y = e.clientY - canvas.offsetTop,
+		clickedSquare = screenToBlock(x, y); // row col
+		var clickedPiece =	WHITE_TEAM.find(function(piece){
+			if(piece.row === clickedSquare.row && piece.col === clickedSquare.col){
+
+				return piece.name;
+			} else {
+				return null;
+			}
+		});
+
+		// highlight the piece
+		// show possible squares
+		// return movetosquare
+
+		if(clickedPiece == null){
+			// you'll do nuttin
+		} else {
+			highlightPiece(clickedPiece);
+			movePiece(clickedSquare, clickedPiece);
+
+		}
+
+
+	}
+	function highlightPiece(clickedPiece) {
+		// Draw outline
+		if (selectedPiece <= 1)
+		{
+			ctx.lineWidth = SELECT_LINE_WIDTH;
+			ctx.strokeStyle = outLine;
+			ctx.strokeRect((clickedPiece.col * BLOCK_SIZE) + SELECT_LINE_WIDTH,
+			(clickedPiece.row * BLOCK_SIZE) + SELECT_LINE_WIDTH,
+			BLOCK_SIZE - (SELECT_LINE_WIDTH * 2),
+			BLOCK_SIZE - (SELECT_LINE_WIDTH * 2));
+
+			selectedPiece = clickedPiece;
+			console.log(selectedPiece.row, selectedPiece.col);
+		}
+	}
+
+
+
+	function movePiece(clickedSquare, clickedPiece)
 	{
-		//processMove(clickedSquare);
-	}*/
-
-	//when clicked, it posts the x and y coordinates
-
-}
-
-function movePiece(clickedSquare)
-{
+		drawSquare(selectedPiece.col, selectedPiece.row);
 
 
-}
+	}
 
 
 
-function isPieceClicked(clickedSquare)
-{
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	/*
+	function isPieceClicked(clickedSquare)
+	{
 	var pieceAtSquare = getPieceAtSquare(clickedSquare);
 
 	if (pieceAtSquare !== null)
 	{
-		selectPiece(pieceAtSquare);
-	}
+	selectPiece(pieceAtSquare);
+}
 }
 
 function getPieceAtSquare(clickedSquare)
 {
-	var teams = (currentTurn === BLACK_TEAM ?  Piece.blackTeam : Piece.whiteTeam);
+var teams = (currentTurn === BLACK_TEAM ?  Piece.blackTeam : Piece.whiteTeam);
 
-	return getPieceAtSquareForTeam;
-}
+return getPieceAtSquareForTeam;
+}*/
