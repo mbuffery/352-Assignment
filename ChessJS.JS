@@ -291,6 +291,7 @@ function DrawBoard() {
         }
         else
         {
+
         }
         drawSquare(selectedField.col, selectedField.row);
         Render();
@@ -305,7 +306,7 @@ function DrawBoard() {
   //check to see if enemypice is same as selectedPiece
   //if so, change status
   // TODO: make checkIfSquareIsBlocked, if returns true, ignore block, returns carry on
-
+function checkIf
   function checkIfSquareIsBlocked (selectedPiece)
   {
     if (currTurn == 1)
