@@ -14,7 +14,14 @@ outLine = '#fb0006';
 
 var blackTurn = 0,
 whiteTurn = 1,
-SELECT_LINE_WIDTH = 5;
+SELECT_LINE_WIDTH = 5,
+ROOK = 'Rook';
+
+var KNIGHT = 'Knight';
+var BISHOP = 'Bishop';
+var QUEEN = 'Queen';
+var KING = 'King';
+var PAWN = 'Pawn';
 
 function draw() {
   var c = document.getElementById("canvas");
@@ -55,7 +62,7 @@ function Render() {
     piece.img = new Image();
     piece.img.src = piece.imgSrc;
   });
-
+//if piece = in play, render the piece in
   WHITE_TEAM.forEach(function(piece) {
     if (piece.status == 'IN_PLAY')
     {
@@ -63,6 +70,7 @@ function Render() {
         ctx.drawImage(piece.img, piece.col * BLOCK_SIZE, piece.row * BLOCK_SIZE);
       }
       allPieces.push(piece);
+      //if piece.status = dead then do not render
     } else if (piece.status == 'DEAD')
     {
 
@@ -216,8 +224,10 @@ function DrawBoard() {
       //selectedPiece = go through the entire piece array and links the clickedSquare data to what piece has been clicked.
       //e.g. piece.row and col = selectedPiece.row and col
 
+      //white turn
       if (currTurn == 1)
       {
+        //selectedPiece = the selected white piece
         selectedPiece = WHITE_TEAM.find(function(piece)
         {
           if (piece.status == 'IN_PLAY' && piece.row == clickedSquare.row && piece.col == clickedSquare.col)
@@ -230,9 +240,10 @@ function DrawBoard() {
             return null;
           }
         });
-
+        //black turn
       } else if (currTurn == 0)
       {
+        //selectedPiece = the selected black piece
         selectedPiece = BLACK_TEAM.find(function(piece)
         {
           if (piece.status == 'IN_PLAY' && piece.row == clickedSquare.row && piece.col == clickedSquare.col)
@@ -259,6 +270,8 @@ function DrawBoard() {
         BLOCK_SIZE - (SELECT_LINE_WIDTH * 2));
         //console.log(selectedPiece.row);
       }
+
+
     }
     else
     {
@@ -269,17 +282,26 @@ function DrawBoard() {
       {
         WHITE_TEAM[WHITE_TEAM.indexOf(selectedPiece)].row = moveToField.row;
         WHITE_TEAM[WHITE_TEAM.indexOf(selectedPiece)].col = moveToField.col;
-        if(checkIfSquareIsBlocked(selectedPiece) == true)
+        if (checkIfFriendlyPiece(selectedPiece) == true)
         {
-          drawSquare(moveToField.col, moveToField.row);
+          return;
+
+        }else {
+
+          if(checkIfSquareIsBlocked(selectedPiece) == true)
+          {
+            drawSquare(moveToField.col, moveToField.row);
+          }
+          else
+          {
+
+          }
+          drawSquare(selectedField.col, selectedField.row);
+          Render();
+          currTurn = currTurn - 1;
+          selectedPiece = null;
         }
-        else
-        {
-        }
-        drawSquare(selectedField.col, selectedField.row);
-        Render();
-        currTurn = currTurn - 1;
-        selectedPiece = null;
+
       }
       else if (currTurn == 0)
       {
@@ -297,93 +319,193 @@ function DrawBoard() {
         Render();
         currTurn = currTurn + 1;
         selectedPiece = null;
+
       }
       //look up regex for giving piece movement
 
     }
   }
 
-  //check to see if enemypice is same as selectedPiece
-  //if so, change status
-  // TODO: make checkIfSquareIsBlocked, if returns true, ignore block, returns carry on
-function checkIf
-  function checkIfSquareIsBlocked (selectedPiece)
+
+  function checkIfFriendlyPiece (selectedPiece)
   {
     if (currTurn == 1)
     {
-      if(BLACK_TEAM.find(function(piece)
+      if (WHITE_TEAM.find(function(piece)
       {
         if (selectedPiece.row == piece.row && selectedPiece.col == piece.col)
         {
-          console.log("black piece selected");
-          console.log(piece);
+          console.log("ally Piece Selected");
           return true;
         }
-        else
-        {
-          console.log("is not black piece");
+        else{
+          console.log("is not ally piece");
           return false;
         }
       }))
-      {
-        BLACK_TEAM.find(function(piece)
-        {
-          if (selectedPiece.row == piece.row && selectedPiece.col == piece.col)
-          {
-            console.log("change state");
-            piece.status = "dead";
-            console.log(piece)
-          }
-        });
-        return true;
-
-      }
-    }else if (currTurn == 0)
-    {
-      if(WHITE_TEAM.find(function(piece)
-      {
-        if (selectedPiece.row == piece.row && selectedPiece.col == piece.col)
-        {
-          console.log("white piece selected");
-          return true;
-        }
-        else
-        {
-          console.log("white piece not selected");
-          return false;
-        }
-      }))
-      {
-        WHITE_TEAM.find(function(piece)
-        {
-          if (selectedPiece.row == piece.row && selectedPiece.col == piece.col)
-          {
-            console.log("change state");
-            piece.status = "d";
-          }
-        });
-        return true;
-      }
+      return true;
     }
   }
-    /*enemyPiece = BLACK_TEAM.find(function(enPiece)
-    {
-    if (enPiece.row == clickedSquare.row && enPiece.col == clickedSquare.col)
-    {
-    return enPiece.name;
-    numSelectedEnPieces = 1;
-  }
-  else
+  /*if (currTurn == 1)
   {
-  return null;
+  if(WHITE_TEAM.find(function(piece)
+  {
+  if (selectedPiece.row == piece.row && selectedPiece.col == piece.col)
+  {
+  console.log("ally Piece selected");
+  return true;
 }
-});*/
-
-function removeSelection(clickedPiece) {
-  console.log("cuck");
-  console.log(clickedPiece.col, clickedPiece.row);
-  drawSquare(clickedPiece.col, clickedPiece.row);
-  console.log("lord");
-
-  console.log(clickedPiece);
+else
+{
+console.log("is not ally piece");
+return false;
 }
+}))
+{
+return true;
+
+}
+}else if (currTurn == 0)
+{
+if(BLACK_TEAM.find(function(piece)
+{
+if (selectedPiece.row == piece.row && selectedPiece.col == piece.col)
+{
+console.log("ally Piece selected");
+return true;
+}
+else
+{
+console.log("ally piece not selected");
+return false;
+}
+}))
+{
+return true;
+}
+}*/
+
+
+function checkIfSquareIsBlocked (selectedPiece)
+{
+  if (currTurn == 1)
+  {
+    if(BLACK_TEAM.find(function(piece)
+    {
+      if (selectedPiece.row == piece.row && selectedPiece.col == piece.col)
+      {
+        console.log("black piece selected");
+        return true;
+      }
+      else
+      {
+        console.log("is not black piece");
+        return false;
+      }
+    }))
+    {
+      BLACK_TEAM.find(function(piece)
+      {
+        if (selectedPiece.row == piece.row && selectedPiece.col == piece.col)
+        {
+          console.log("change state");
+          piece.status = "dead";
+        }
+      });
+      return true;
+    }
+  }else if (currTurn == 0)
+  {
+    if(WHITE_TEAM.find(function(piece)
+    {
+      if (selectedPiece.row == piece.row && selectedPiece.col == piece.col)
+      {
+        console.log("white piece selected");
+        return true;
+      }
+      else
+      {
+        console.log("white piece not selected");
+        return false;
+      }
+    }))
+    {
+      WHITE_TEAM.find(function(piece)
+      {
+        if (selectedPiece.row == piece.row && selectedPiece.col == piece.col)
+        {
+          console.log("change state");
+          piece.status = "d";
+        }
+      });
+      return true;
+    }
+  }
+}
+
+function RemoveSelection(selectedPiece) {
+  if (currTurn == 0)
+  {
+    drawSquare(selectedPiece.col, selectedPiece.row);
+  	Render(selectedPiece);
+  } else if (currTurn == 1)
+  {
+    drawSquare(selectedPiece.col, selectedPiece.row);
+  	Render(selectedPiece);
+  }
+}
+
+function canSelectePiecedMoveToSquare(selectedPiece) {
+	var pCanMove = false;
+
+	switch (selectedPiece.piece) {
+
+	case ROOK:
+
+
+		break;
+
+	case KNIGHT:
+
+		// TODO
+
+		break;
+
+	case BISHOP:
+
+		// TODO
+
+		break;
+
+	case QUEEN:
+
+		// TODO
+
+		break;
+
+	case KING:
+
+		// TODO
+
+		break;
+
+	case PAWN:
+
+		pCanMove = canPawnMoveToBlock(selectedPiece);
+
+		break;
+	}
+
+	return bCanMove;
+}
+function canPawnMoveToBlock (selectedPiece)
+{
+  var move
+}
+
+//TODO:
+// * fix RemoveSelection
+// * fix ally piece deleting themself when attacking another allied pieces
+// * add individual piece movement
+// * add a win situation
+// * setup online server
