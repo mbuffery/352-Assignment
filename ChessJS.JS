@@ -160,20 +160,20 @@ function DrawBoard() {
     var whiteLKnight = new Piece("whiteLKnight", 0, 1, 'IN_PLAY', 'whiteKnight.png', 'Knight');
     var whiteRKnight = new Piece("whiteRKnight", 0, 6, 'IN_PLAY', 'whiteKnight.png', 'Knight');
 
-    var whiteLBishop = new Piece("whiteLBishop", 0, 2, 'IN_PLAY', 'whiteBishop.png');
-    var whiteRBishop = new Piece("whiteRBishop", 0, 5, 'IN_PLAY', 'whiteBishop.png');
+    var whiteLBishop = new Piece("whiteLBishop", 0, 2, 'IN_PLAY', 'whiteBishop.png', 'Bishop');
+    var whiteRBishop = new Piece("whiteRBishop", 0, 5, 'IN_PLAY', 'whiteBishop.png', 'Bishop');
 
-    var whiteQueen = new Piece("whiteQueen", 0, 4, 'IN_PLAY', 'whiteQueen.png');
-    var whiteKing = new Piece("whiteKing", 0, 3, 'IN_PLAY', 'whiteKing.png');
+    var whiteQueen = new Piece("whiteQueen", 0, 4, 'IN_PLAY', 'whiteQueen.png', 'Queen');
+    var whiteKing = new Piece("whiteKing", 0, 3, 'IN_PLAY', 'whiteKing.png', 'King');
 
-    var whitePawn1 = new Piece("whitePawn1", 1, 0, 'IN_PLAY', 'whitePawn.png');
-    var whitePawn2 = new Piece("whitePawn2", 1, 1, 'IN_PLAY', 'whitePawn.png');
-    var whitePawn3 = new Piece("whitePawn3", 1, 2, 'IN_PLAY', 'whitePawn.png');
-    var whitePawn4 = new Piece("whitePawn4", 1, 3, 'IN_PLAY', 'whitePawn.png');
-    var whitePawn5 = new Piece("whitePawn5", 1, 4, 'IN_PLAY', 'whitePawn.png');
-    var whitePawn6 = new Piece("whitePawn6", 1, 5, 'IN_PLAY', 'whitePawn.png');
-    var whitePawn7 = new Piece("whitePawn7", 1, 6, 'IN_PLAY', 'whitePawn.png');
-    var whitePawn8 = new Piece("whitePawn8", 1, 7, 'IN_PLAY', 'whitePawn.png');
+    var whitePawn1 = new Piece("whitePawn1", 1, 0, 'IN_PLAY', 'whitePawn.png', 'Pawn');
+    var whitePawn2 = new Piece("whitePawn2", 1, 1, 'IN_PLAY', 'whitePawn.png', 'Pawn');
+    var whitePawn3 = new Piece("whitePawn3", 1, 2, 'IN_PLAY', 'whitePawn.png', 'Pawn');
+    var whitePawn4 = new Piece("whitePawn4", 1, 3, 'IN_PLAY', 'whitePawn.png', 'Pawn');
+    var whitePawn5 = new Piece("whitePawn5", 1, 4, 'IN_PLAY', 'whitePawn.png', 'Pawn');
+    var whitePawn6 = new Piece("whitePawn6", 1, 5, 'IN_PLAY', 'whitePawn.png', 'Pawn');
+    var whitePawn7 = new Piece("whitePawn7", 1, 6, 'IN_PLAY', 'whitePawn.png', 'Pawn');
+    var whitePawn8 = new Piece("whitePawn8", 1, 7, 'IN_PLAY', 'whitePawn.png', 'Pawn');
 
     //Creates Black pieces
     var blackLRook = new Piece("blackLRook", 7, 0, 'IN_PLAY', 'blackRook.png', 'Rook');
@@ -182,20 +182,20 @@ function DrawBoard() {
     var blackLKnight = new Piece("blackLKnight", 7, 1, 'IN_PLAY', 'blackKnight.png', 'Knight');
     var blackRKnight = new Piece("blackRKnight", 7, 6, 'IN_PLAY', 'blackKnight.png', 'Knight');
 
-    var blackLBishop = new Piece("blackLBishop", 7, 2, 'IN_PLAY', 'blackBishop.png');
-    var blackRBishop = new Piece("blackRBishop", 7, 5, 'IN_PLAY', 'blackBishop.png');
+    var blackLBishop = new Piece("blackLBishop", 7, 2, 'IN_PLAY', 'blackBishop.png', 'Bishop');
+    var blackRBishop = new Piece("blackRBishop", 7, 5, 'IN_PLAY', 'blackBishop.png', 'Bishop');
 
-    var blackQueen = new Piece("blackQueen", 7, 4, 'IN_PLAY', 'blackQueen.png');
-    var blackKing = new Piece("blackKing", 7, 3, 'IN_PLAY', 'blackKing.png');
+    var blackQueen = new Piece("blackQueen", 7, 4, 'IN_PLAY', 'blackQueen.png', 'Queen');
+    var blackKing = new Piece("blackKing", 7, 3, 'IN_PLAY', 'blackKing.png', 'King');
 
-    var blackPawn1 = new Piece("blackPawn1", 6, 0, 'IN_PLAY', 'blackPawn.png');
-    var blackPawn2 = new Piece("blackPawn2", 6, 1, 'IN_PLAY', 'blackPawn.png');
-    var blackPawn3 = new Piece("blackPawn3", 6, 2, 'IN_PLAY', 'blackPawn.png');
-    var blackPawn4 = new Piece("blackPawn4", 6, 3, 'IN_PLAY', 'blackPawn.png');
-    var blackPawn5 = new Piece("blackPawn5", 6, 4, 'IN_PLAY', 'blackPawn.png');
-    var blackPawn6 = new Piece("blackPawn6", 6, 5, 'IN_PLAY', 'blackPawn.png');
-    var blackPawn7 = new Piece("blackPawn7", 6, 6, 'IN_PLAY', 'blackPawn.png');
-    var blackPawn8 = new Piece("blackPawn8", 6, 7, 'IN_PLAY', 'blackPawn.png');
+    var blackPawn1 = new Piece("blackPawn1", 6, 0, 'IN_PLAY', 'blackPawn.png', 'Pawn');
+    var blackPawn2 = new Piece("blackPawn2", 6, 1, 'IN_PLAY', 'blackPawn.png', 'Pawn');
+    var blackPawn3 = new Piece("blackPawn3", 6, 2, 'IN_PLAY', 'blackPawn.png', 'Pawn');
+    var blackPawn4 = new Piece("blackPawn4", 6, 3, 'IN_PLAY', 'blackPawn.png', 'Pawn');
+    var blackPawn5 = new Piece("blackPawn5", 6, 4, 'IN_PLAY', 'blackPawn.png', 'Pawn');
+    var blackPawn6 = new Piece("blackPawn6", 6, 5, 'IN_PLAY', 'blackPawn.png', 'Pawn');
+    var blackPawn7 = new Piece("blackPawn7", 6, 6, 'IN_PLAY', 'blackPawn.png', 'Pawn');
+    var blackPawn8 = new Piece("blackPawn8", 6, 7, 'IN_PLAY', 'blackPawn.png', 'Pawn');
 
     //pushes all created pieces to white or black team
     WHITE_TEAM.push(whiteLRook, whiteRRook, whiteLKnight, whiteRKnight, whiteLBishop, whiteRBishop, whiteQueen, whiteKing, whitePawn1, whitePawn2, whitePawn3, whitePawn4, whitePawn5, whitePawn6, whitePawn7, whitePawn8);
@@ -203,8 +203,6 @@ function DrawBoard() {
     BLACK_TEAM.push(blackLRook, blackRRook, blackLKnight, blackRKnight, blackLBishop, blackRBishop, blackQueen, blackKing, blackPawn1, blackPawn2, blackPawn3, blackPawn4, blackPawn5, blackPawn6, blackPawn7, blackPawn8);
 
   }
-
-
   var selectedPiece = null;
   var numSelectedPieces = 0;
   var selectedField = null;
@@ -229,6 +227,7 @@ function DrawBoard() {
         {
           if (piece.status == 'IN_PLAY' && piece.row == clickedSquare.row && piece.col == clickedSquare.col)
           {
+            //returns the piece name
             numSelectedPieces = 1;
             return piece.name;
           }
@@ -246,6 +245,7 @@ function DrawBoard() {
         {
           if (piece.status == 'IN_PLAY' && piece.row == clickedSquare.row && piece.col == clickedSquare.col)
           {
+            //returns the piece name
             numSelectedPieces = 1;
             return piece.name;
           }
@@ -276,12 +276,13 @@ function DrawBoard() {
       var x = e.clientX - canvas.offsetLeft,
       y = e.clientY - canvas.offsetTop,
       moveToField = screenToBlock(x, y);
-      canSelectedPiecedMoveToSquare(selectedPiece, moveToField);
-      //If currTurn is white, moveToField.row and .col = selectedPiece.row and col
+
+      //removeSelection feature
       if (currTurn == 1)
-      {
+      { //if the selectedPiece = where it will move next
         if (selectedPiece.row == moveToField.row && selectedPiece.col == moveToField.col)
         {
+          //redraw the entire square and piece all set selelcted piece back to null
         drawSquare(moveToField.col, moveToField.row);
         Render();
         currTurn = 1;
@@ -289,21 +290,19 @@ function DrawBoard() {
       }
       } else if (currTurn == 0)
       {
+        //redraw the entire square and piece all set selelcted piece back to null
         drawSquare(moveToField.col, moveToField.row);
         Render();
         currTurn = 0;
         selectedPiece = null;
       }
       if (currTurn == 1)
-      {
-        console.log(WHITE_TEAM[WHITE_TEAM.indexOf( selectedPiece)]);
-
+      { //if it is friendly piece, call checkIfFriendlyPiece and make the currTurn = 1;
           if (checkIfFriendlyPiece(moveToField))
           {
-            console.log("isFriendly");
             currTurn = 1;
-          } else if (checkIfEnemyPiece(moveToField) == true) {
-            console.log("isEnemy");
+          } //Checks for whether it is a enemy piece.
+           else if (checkIfEnemyPiece(moveToField) == true) {
             WHITE_TEAM[WHITE_TEAM.indexOf(selectedPiece)].row = moveToField.row;
             WHITE_TEAM[WHITE_TEAM.indexOf(selectedPiece)].col = moveToField.col;
          drawSquare(moveToField.col, moveToField.row);
@@ -313,7 +312,6 @@ function DrawBoard() {
          selectedPiece = null;
          numSelectedPieces = 0;
        } else { // empty square
-         console.log("isEmptySquare");
          WHITE_TEAM[WHITE_TEAM.indexOf(selectedPiece)].row = moveToField.row;
          WHITE_TEAM[WHITE_TEAM.indexOf(selectedPiece)].col = moveToField.col;
          drawSquare(selectedField.col, selectedField.row);
@@ -359,10 +357,9 @@ function DrawBoard() {
 //
   function checkIfFriendlyPiece (moveToField)
   {
-    console.log("checkiffriendly selected: ");
-    console.log(moveToField);
+    //if white turn
     if (currTurn == 1)
-    {
+    { //finds a white team piece that fits the the statement, return true otherwise return false
     if(WHITE_TEAM.find(function(piece) {
       if (moveToField.row == piece.row && moveToField.col == piece.col && piece.status == "IN_PLAY")
       {
@@ -445,13 +442,6 @@ function CheckForWinCondition (selectedPiece)
 
 }
 
-function canSelectedPiecedMoveToSquare(selectedPiece, moveToField) {
-
-
-
-  }
-
-}
 function canPawnMoveToBlock (selectedPiece)
 {
   if (currTurn == 0)
@@ -465,8 +455,6 @@ function canPawnMoveToBlock (selectedPiece)
 }
 
 //TODO:
-// * fix RemoveSelection
-// * fix ally piece deleting themself when attacking another allied pieces
 // * add individual piece movement
 // * add a win situation
 // * setup online server
