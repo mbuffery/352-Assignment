@@ -215,7 +215,7 @@ function DrawBoard() {
       y = e.clientY - canvas.offsetTop,
       //clickedSquare = Row and col
       clickedSquare = screenToBlock(x, y);
-
+      console.log(currTurn);
       //selectedPiece = go through the entire piece array and links the clickedSquare data to what piece has been clicked.
       //e.g. piece.row and col = selectedPiece.row and col
 
@@ -276,117 +276,125 @@ function DrawBoard() {
       var x = e.clientX - canvas.offsetLeft,
       y = e.clientY - canvas.offsetTop,
       moveToField = screenToBlock(x, y);
-
+      //DO the switch case here
+      //just call the function here
       //removeSelection feature
       if (currTurn == 1)
       { //if the selectedPiece = where it will move next
         if (selectedPiece.row == moveToField.row && selectedPiece.col == moveToField.col)
         {
           //redraw the entire square and piece all set selelcted piece back to null
-        drawSquare(moveToField.col, moveToField.row);
-        Render();
-        currTurn = 1;
-        selectedPiece = null;
+          drawSquare(moveToField.col, moveToField.row);
+          Render();
+          currTurn = 1;
+          selectedPiece = null;
+        }
       }
-      } else if (currTurn == 0)
+      else if (currTurn == 0)
       {
-        //redraw the entire square and piece all set selelcted piece back to null
-        drawSquare(moveToField.col, moveToField.row);
-        Render();
-        currTurn = 0;
-        selectedPiece = null;
+        if (selectedPiece.row == moveToField.row && selectedPiece.col == moveToField.col)
+        {
+          //redraw the entire square and piece all set selelcted piece back to null
+          drawSquare(moveToField.col, moveToField.row);
+          Render();
+          currTurn = 0;
+          selectedPiece = null;
+        }
       }
       if (currTurn == 1)
       { //if it is friendly piece, call checkIfFriendlyPiece and make the currTurn = 1;
-          if (checkIfFriendlyPiece(moveToField))
-          {
-            currTurn = 1;
-          } //Checks for whether it is a enemy piece.
-           else if (checkIfEnemyPiece(moveToField) == true) {
-            WHITE_TEAM[WHITE_TEAM.indexOf(selectedPiece)].row = moveToField.row;
-            WHITE_TEAM[WHITE_TEAM.indexOf(selectedPiece)].col = moveToField.col;
-         drawSquare(moveToField.col, moveToField.row);
-         drawSquare(selectedField.col, selectedField.row);
-         Render();
-         currTurn = currTurn - 1;
-         selectedPiece = null;
-         numSelectedPieces = 0;
-       } else { // empty square
-         WHITE_TEAM[WHITE_TEAM.indexOf(selectedPiece)].row = moveToField.row;
-         WHITE_TEAM[WHITE_TEAM.indexOf(selectedPiece)].col = moveToField.col;
-         drawSquare(selectedField.col, selectedField.row);
-         Render();
-         currTurn = currTurn - 1;
-         selectedPiece = null;
-         numSelectedPieces = 0;
-       }
-     }
-
-        else if (currTurn == 0)
+        if (checkIfFriendlyPiece(moveToField))
         {
-          if (checkIfFriendlyPiece(moveToField))
-          {
-            console.log("isFriendly");
-            currTurn = 0;
-          } else if (checkIfEnemyPiece(moveToField) == true) {
-            console.log("isEnemy");
-            BLACK_TEAM[BLACK_TEAM.indexOf(selectedPiece)].row = moveToField.row;
-            BLACK_TEAM[BLACK_TEAM.indexOf(selectedPiece)].col = moveToField.col;
-         drawSquare(selectedField.col, selectedField.row);
-         drawSquare(moveToField.col, moveToField.row);
-         Render();
-         currTurn = currTurn + 1;
-         selectedPiece = null;
-         numSelectedPieces = 0;
-       } else { // empty square
-         console.log("isEmptySquare");
-         BLACK_TEAM[BLACK_TEAM.indexOf(selectedPiece)].row = moveToField.row;
-         BLACK_TEAM[BLACK_TEAM.indexOf(selectedPiece)].col = moveToField.col;
-         drawSquare(selectedField.col, selectedField.row);
-         Render();
-         currTurn = currTurn + 1;
-         selectedPiece = null;
-         numSelectedPieces = 0;
-       }
+          currTurn = 1;
+        } //Checks for whether it is a enemy piece.
+        else if (checkIfEnemyPiece(moveToField) == true)
+        {
+          WHITE_TEAM[WHITE_TEAM.indexOf(selectedPiece)].row = moveToField.row;
+          WHITE_TEAM[WHITE_TEAM.indexOf(selectedPiece)].col = moveToField.col;
+          drawSquare(moveToField.col, moveToField.row);
+          drawSquare(selectedField.col, selectedField.row);
+          Render();
+          currTurn = currTurn - 1;
+          selectedPiece = null;
+          numSelectedPieces = 0;
+        }
+        else
+        { // empty square
+          WHITE_TEAM[WHITE_TEAM.indexOf(selectedPiece)].row = moveToField.row;
+          WHITE_TEAM[WHITE_TEAM.indexOf(selectedPiece)].col = moveToField.col;
+          drawSquare(selectedField.col, selectedField.row);
+          Render();
+          currTurn = currTurn - 1;
+          selectedPiece = null;
+          numSelectedPieces = 0;
+        }
+      }
+      else if (currTurn == 0)
+      { //if it is friendly piece, call checkIfFriendlyPiece and make the currTurn = 1;
+        if (checkIfFriendlyPiece(moveToField))
+        {
+          currTurn = 0;
+        } //Checks for whether it is a enemy piece.
+        else if (checkIfEnemyPiece(moveToField) == true)
+        {
+          BLACK_TEAM[BLACK_TEAM.indexOf(selectedPiece)].row = moveToField.row;
+          BLACK_TEAM[BLACK_TEAM.indexOf(selectedPiece)].col = moveToField.col;
+          drawSquare(moveToField.col, moveToField.row);
+          drawSquare(selectedField.col, selectedField.row);
+          Render();
+          currTurn = currTurn + 1;
+          selectedPiece = null;
+          numSelectedPieces = 0;
+        }
+        else
+        { // empty square
+          BLACK_TEAM[BLACK_TEAM.indexOf(selectedPiece)].row = moveToField.row;
+          BLACK_TEAM[BLACK_TEAM.indexOf(selectedPiece)].col = moveToField.col;
+          drawSquare(selectedField.col, selectedField.row);
+          Render();
+          currTurn = currTurn + 1;
+          selectedPiece = null;
+          numSelectedPieces = 0;
         }
       }
     }
-    //look up regex for giving piece movement
+  }
+  //look up regex for giving piece movement
 
 
-//
+  //
   function checkIfFriendlyPiece (moveToField)
   {
     //if white turn
     if (currTurn == 1)
     { //finds a white team piece that fits the the statement, return true otherwise return false
-    if(WHITE_TEAM.find(function(piece) {
-      if (moveToField.row == piece.row && moveToField.col == piece.col && piece.status == "IN_PLAY")
-      {
-        return true;
-      } else {
+      if(WHITE_TEAM.find(function(piece) {
+        if (moveToField.row == piece.row && moveToField.col == piece.col && piece.status == "IN_PLAY")
+        {
+          return true;
+        } else {
           return false;
-      }
-    })){
-      return true;
-    } else{
-      return false;
-    }
-  }else
-  {
-    if(BLACK_TEAM.find(function(piece) {
-      if (moveToField.row == piece.row && moveToField.col == piece.col && piece.status == "IN_PLAY")
-      {
+        }
+      })){
         return true;
-      } else {
-          return false;
+      } else{
+        return false;
       }
-    })){
-      return true;
-    } else{
-      return false;
+    }else
+    {
+      if(BLACK_TEAM.find(function(piece) {
+        if (moveToField.row == piece.row && moveToField.col == piece.col && piece.status == "IN_PLAY")
+        {
+          return true;
+        } else {
+          return false;
+        }
+      })){
+        return true;
+      } else{
+        return false;
+      }
     }
-  }
 
 
   }
@@ -394,8 +402,10 @@ function DrawBoard() {
   // deletes the piece if it is used by
   function checkIfEnemyPiece (moveToField)
   {
+    //white turn
     if (currTurn == 1)
     {
+      //any black piece selected that equals the moveToField will have their status changed to dead
       if(BLACK_TEAM.find(function(piece) {
         if (moveToField.row == piece.row && moveToField.col == piece.col)
         {
@@ -417,10 +427,7 @@ function DrawBoard() {
       if(WHITE_TEAM.find(function(piece) {
         if (moveToField.row == piece.row && moveToField.col == piece.col)
         {
-          //return true
-          console.log("White enemy piece");
           piece.status = "prettydead";
-          console.log(piece.status);
           return true;
         } else {
           return false;
@@ -433,28 +440,29 @@ function DrawBoard() {
         return false;
       }
     }
-}
-
-
-
-function CheckForWinCondition (selectedPiece)
-{
-
-}
-
-function canPawnMoveToBlock (selectedPiece)
-{
-  if (currTurn == 0)
-  {
-    selectedPiece.row + 1
   }
-  else if (currTurn == 1)
+
+
+
+  function CheckForWinCondition (selectedPiece)
   {
 
   }
-}
 
-//TODO:
-// * add individual piece movement
-// * add a win situation
-// * setup online server
+  function canPawnMoveToBlock (selectedPiece)
+  {
+    if (currTurn == 0)
+    {
+      selectedPiece.row + 1
+    }
+    else if (currTurn == 1)
+    {
+
+    }
+  }
+
+  //TODO:
+  // * add individual piece movement
+  // * Look at filter array
+  // * add a win situation
+  // * setup online server
