@@ -1,3 +1,43 @@
+//Linking the server with the game
+var socket = io();
+
+//First socket.on updates the turn from the Server
+socket.on('updateCurrTurn', function(data)
+{
+  if (serverStatus == true)
+  {
+    currTurn = data;
+
+      if(currTurn == 1)
+      {
+        document.getElementById("teamTurn").innerHTML = "white's Turn";
+        console.log(currTurn);
+
+        console.log("turn data is Working!");
+      } else if (currTurn == 0)
+      {
+        console.log(currTurn);
+
+        document.getElementById("teamTurn").innerHTML = "black's Turn";
+
+      }
+
+  }
+});
+/*socket.on('updateWhitePieces', function(data)
+{
+  if (serverStatus == true)
+  {
+    WHITE_TEAM = data;
+
+      if(currTurn == 1)
+      {
+        Render();
+
+      }
+  }
+});*/
+
 var numOfCol = 8,
 numOfRow = 8,
 WHITE_TEAM = new Array(),
@@ -11,59 +51,21 @@ var greySquare = '#878787',
 whiteSquare = '#ffffff',
 outLine = '#fb0006';
 
-var serverStatus = false,
-endGame = false;
+var serverStatus = true,
+endGame = false,
+serverOnline = true;
 
 
-var blackTurn = 0,
-whiteTurn = 1,
-white = "White's Turn",
+var white = "White's Turn",
 black = "Black's Turn",
-SELECT_LINE_WIDTH = 5,
-ROOK = 'Rook';
+SELECT_LINE_WIDTH = 5;
 
-//Linking the server with the game
-var socket = io();
 
-//First socket.on updates the turn from the Server
-socket.on('sendWhiteTurn', function(data)
-{
-  if (serverStatus == true)
-  {
-    white = data;
-
-    if (endGame == false)
-    {
-      if(currTurn == 1)
-      {
-        document.getElementById("teamTurn").innerHTML = white;
-        console.log("turn data is Working!");
-      }
-    }
-  }
-});
-
-socket.on('sendBlackTurn', function(data)
-{
-  if (serverStatus == true)
-  {
-    black = data;
-
-    if (endGame == false)
-    {
-      if(currTurn == 1)
-      {
-        document.getElementById("teamTurn").innerHTML = white;
-        console.log("turn data is Working!");
-      }
-    }
-  }
-});
 
 
 function draw() {
 
-
+  //gets the id for the canvas
   var c = document.getElementById("canvas");
   //checks to see if canvas is supported
   if (canvas.getContext) {
@@ -90,44 +92,6 @@ function draw() {
     alert("Canvas is not supported")
   }
 
-}
-
-function Render() {
-  //Goes through the entire array and renders the img,row(y) and collums(x);
-  WHITE_TEAM.forEach(function(piece) {
-    piece.img = new Image();
-    piece.img.src = piece.imgSrc;
-  });
-  BLACK_TEAM.forEach(function(piece) {
-    piece.img = new Image();
-    piece.img.src = piece.imgSrc;
-  });
-  //if piece = in play, render the piece in
-  WHITE_TEAM.forEach(function(piece) {
-    if (piece.status == 'IN_PLAY')
-    {
-      piece.img.onload = function() {
-        ctx.drawImage(piece.img, piece.col * BLOCK_SIZE, piece.row * BLOCK_SIZE);
-      }
-      allPieces.push(piece);
-      //if piece.status = dead then do not render
-    } else if (piece.status == 'DEAD')
-    {
-
-    }
-  });
-  BLACK_TEAM.forEach(function(piece) {
-    if (piece.status == 'IN_PLAY')
-    {
-      piece.img.onload = function() {
-        ctx.drawImage(piece.img, piece.col * BLOCK_SIZE, piece.row * BLOCK_SIZE);
-      }
-      allPieces.push(piece);
-    } else if (piece.status == 'DEAD')
-    {
-
-    }
-  });
 }
 
 function DrawBoard() {
@@ -248,10 +212,48 @@ function DrawBoard() {
     BLACK_TEAM.push(blackLRook, blackRRook, blackLKnight, blackRKnight, blackLBishop, blackRBishop, blackQueen, blackKing, blackPawn1, blackPawn2, blackPawn3, blackPawn4, blackPawn5, blackPawn6, blackPawn7, blackPawn8);
 
   }
+  function Render() {
+    //Goes through the entire array and renders the img,row(y) and collums(x);
+    WHITE_TEAM.forEach(function(piece) {
+      piece.img = new Image();
+      piece.img.src = piece.imgSrc;
+    });
+    BLACK_TEAM.forEach(function(piece) {
+      piece.img = new Image();
+      piece.img.src = piece.imgSrc;
+    });
+    //if piece = in play, render the piece in
+    WHITE_TEAM.forEach(function(piece) {
+      if (piece.status == 'IN_PLAY')
+      {
+        piece.img.onload = function() {
+          ctx.drawImage(piece.img, piece.col * BLOCK_SIZE, piece.row * BLOCK_SIZE);
+        }
+        allPieces.push(piece);
+        //if piece.status = dead then do not render
+      } else if (piece.status == 'DEAD')
+      {
+
+      }
+    });
+    BLACK_TEAM.forEach(function(piece) {
+      if (piece.status == 'IN_PLAY')
+      {
+        piece.img.onload = function() {
+          ctx.drawImage(piece.img, piece.col * BLOCK_SIZE, piece.row * BLOCK_SIZE);
+        }
+        allPieces.push(piece);
+      } else if (piece.status == 'DEAD')
+      {
+
+      }
+    });
+  }
   var selectedPiece = null;
   var numSelectedPieces = 0;
   var selectedField = null;
   var currTurn = 1;
+
 
   function handleClick(e) {
     //First Click
@@ -337,8 +339,6 @@ function DrawBoard() {
           Render();
           currTurn = 1;
           selectedPiece = null;
-
-
         }
       }
       else if (currTurn == 0)
@@ -369,8 +369,8 @@ function DrawBoard() {
           currTurn = currTurn - 1;
           selectedPiece = null;
           numSelectedPieces = 0;
-          document.getElementById("teamTurn").innerHTML = black;
-          socket.emit('sendBlackTurn', black);
+          //document.getElementById("teamTurn").innerHTML = "black Turn";
+
 
         }
         else
@@ -382,10 +382,11 @@ function DrawBoard() {
           currTurn = currTurn - 1;
           selectedPiece = null;
           numSelectedPieces = 0;
-          document.getElementById("teamTurn").innerHTML = black;
+          //document.getElementById("teamTurn").innerHTML = "black Turn";
 
-          socket.emit('sendCurrTurn', currTurn);
         }
+        socket.emit('updateCurrTurn', currTurn);
+        socket.emit('updateWhitePieces', WHITE_TEAM);
       }
       else if (currTurn == 0)
       { //if it is friendly piece, call checkIfFriendlyPiece and make the currTurn = 1;
@@ -404,8 +405,8 @@ function DrawBoard() {
           currTurn = currTurn + 1;
           selectedPiece = null;
           numSelectedPieces = 0;
-          document.getElementById("teamTurn").innerHTML = white;
-          socket.emit('sendCurrTurn', currTurn);
+          //document.getElementById("teamTurn").innerHTML = "white Turn";
+
         }
         else
         { // empty square
@@ -416,10 +417,12 @@ function DrawBoard() {
           currTurn = currTurn + 1;
           selectedPiece = null;
           numSelectedPieces = 0;
-          document.getElementById("teamTurn").innerHTML = white;
-          socket.emit('sendCurrTurn', currTurn);
+          //document.getElementById("teamTurn").innerHTML = "white Turn";
+
         }
       }
+      socket.emit('updateCurrTurn', currTurn);
+
     }
   }
   //look up regex for giving piece movement
@@ -530,7 +533,24 @@ function DrawBoard() {
 
     }
   }
-  var resetButton = document.getElementById("");
+  //var resetButton = document.getElementById("resetButton");
+
+  function myFunction()
+  {
+    console.log("hello");
+    redraw();
+    draw();
+    selectedPiece = null;
+    numSelectedPieces = 0;
+    selectedField = null;
+    currTurn = 1;
+
+  }
+  function redraw()
+  {
+
+  }
+
 
   //TODO:
   // * add individual piece movement

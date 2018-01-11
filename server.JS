@@ -2,9 +2,11 @@ var express = require('express');
 var app = express();
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
-
+//Server listens to port 80
 server.listen(80);
-console.log("Server on port 80");
+
+console.log("server on port 80");
+
 //using express to read and sends the Chess.html to the server
 app.get('/', function (req, res) {
   res.sendfile(__dirname + '/Public/Chesshtml.html');
@@ -19,11 +21,10 @@ var users = [];
 //All the variables that will need to be constantly checked and updates for the players/clients
 var WHITE_TEAM = [],
 BLACK_TEAM = [],
+currTurn = 1,
 white = "White's Turn",
-black = "Black's Turn",
-selectedField = null,
-selectedPiece = null,
-numSelectedPieces = 0;
+black = "Black's Turn";
+
 
 //upon client connecting
 io.on('connection', function (socket) {
@@ -41,22 +42,19 @@ io.on('connection', function (socket) {
   console.log('client connected ' + socket.id);
 
   //Turn system relates back from client
-  socket.on('updateWhiteTurn', function(data)
+  socket.on('updateCurrTurn', function(data)
   {
-    white = data;
+    currTurn = data;
   });
-  socket.on('updateBlackTurn', function(data)
-  {
-    black = data;
-  });
-  socket.on('updateBlackPieces', function(data)
-  {
-    BLACK_TEAM = data;
-  });
+
+  //socket.on('updateBlackPieces', function(data)
+ //{
+//    BLACK_TEAM = data;
+//  });
   socket.on('updateWhitePieces', function(data)
   {
     WHITE_TEAM = data;
-  });
+ });
 
 });
 
@@ -67,8 +65,8 @@ setInterval(function()
   for(var i in users)
 {
   var socket = users[i];
-  socket.emit('sendCurrTurn', currTurn);
-  socket.emit('updateBlackPieces', BLACK_TEAM);
+  socket.emit('updateCurrTurn', currTurn);
+  //socket.emit('updateBlackPieces', BLACK_TEAM);
   socket.emit('updateWhitePieces', WHITE_TEAM);
 }
-},1000/10);
+},1000/10); //Server will be updated 10 times a second for fluid interactions and movement
