@@ -19,7 +19,8 @@ var users = [];
 //All the variables that will need to be constantly checked and updates for the players/clients
 var WHITE_TEAM = [],
 BLACK_TEAM = [],
-currTurn = 1,
+white = "White's Turn",
+black = "Black's Turn",
 selectedField = null,
 selectedPiece = null,
 numSelectedPieces = 0;
@@ -40,9 +41,13 @@ io.on('connection', function (socket) {
   console.log('client connected ' + socket.id);
 
   //Turn system relates back from client
-  socket.on('sendCurrTurn', function(data)
+  socket.on('updateWhiteTurn', function(data)
   {
-    currTurn = data;
+    white = data;
+  });
+  socket.on('updateBlackTurn', function(data)
+  {
+    black = data;
   });
   socket.on('updateBlackPieces', function(data)
   {
@@ -52,6 +57,7 @@ io.on('connection', function (socket) {
   {
     WHITE_TEAM = data;
   });
+
 });
 
 

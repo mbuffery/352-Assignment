@@ -8,13 +8,17 @@ Board = null,
 BLOCK_SIZE = 100;
 
 var greySquare = '#878787',
-whiteSquare = '#ffffff'
+whiteSquare = '#ffffff',
 outLine = '#fb0006';
 
-var serverStatus = false;
+var serverStatus = false,
+endGame = false;
+
 
 var blackTurn = 0,
 whiteTurn = 1,
+white = "White's Turn",
+black = "Black's Turn",
 SELECT_LINE_WIDTH = 5,
 ROOK = 'Rook';
 
@@ -22,23 +26,39 @@ ROOK = 'Rook';
 var socket = io();
 
 //First socket.on updates the turn from the Server
-socket.on('sendCurrTurn', function(data)
+socket.on('sendWhiteTurn', function(data)
 {
   if (serverStatus == true)
   {
-    currTurn = data;
+    white = data;
 
-    if(currTurn == 1)
+    if (endGame == false)
     {
-      console.log("turn data is Working!");
-    }else if (currTurn == 0)
-    {
-      console.log("black turn");
+      if(currTurn == 1)
+      {
+        document.getElementById("teamTurn").innerHTML = white;
+        console.log("turn data is Working!");
+      }
     }
   }
 });
 
+socket.on('sendBlackTurn', function(data)
+{
+  if (serverStatus == true)
+  {
+    black = data;
 
+    if (endGame == false)
+    {
+      if(currTurn == 1)
+      {
+        document.getElementById("teamTurn").innerHTML = white;
+        console.log("turn data is Working!");
+      }
+    }
+  }
+});
 
 
 function draw() {
@@ -61,7 +81,7 @@ function draw() {
     //Renders all pieces
     Render();
 
-    //document.getElementById("teamTurn").innerHTML = currentTurn;
+    document.getElementById("teamTurn").innerHTML = white;
 
     // when canvas is clicked, calls handleClick function
     c.addEventListener('click', handleClick);
@@ -188,8 +208,8 @@ function DrawBoard() {
     var whiteLBishop = new Piece("whiteLBishop", 0, 2, 'IN_PLAY', 'whiteBishop.png', 'Bishop');
     var whiteRBishop = new Piece("whiteRBishop", 0, 5, 'IN_PLAY', 'whiteBishop.png', 'Bishop');
 
-    var whiteQueen = new Piece("whiteQueen", 0, 4, 'IN_PLAY', 'whiteQueen.png', 'Queen');
-    var whiteKing = new Piece("whiteKing", 0, 3, 'IN_PLAY', 'whiteKing.png', 'King');
+    var whiteQueen = new Piece("whiteQueen", 0, 3, 'IN_PLAY', 'whiteQueen.png', 'Queen');
+    var whiteKing = new Piece("whiteKing", 0, 4, 'IN_PLAY', 'whiteKing.png', 'King');
 
     var whitePawn1 = new Piece("whitePawn1", 1, 0, 'IN_PLAY', 'whitePawn.png', 'Pawn');
     var whitePawn2 = new Piece("whitePawn2", 1, 1, 'IN_PLAY', 'whitePawn.png', 'Pawn');
@@ -210,8 +230,8 @@ function DrawBoard() {
     var blackLBishop = new Piece("blackLBishop", 7, 2, 'IN_PLAY', 'blackBishop.png', 'Bishop');
     var blackRBishop = new Piece("blackRBishop", 7, 5, 'IN_PLAY', 'blackBishop.png', 'Bishop');
 
-    var blackQueen = new Piece("blackQueen", 7, 4, 'IN_PLAY', 'blackQueen.png', 'Queen');
-    var blackKing = new Piece("blackKing", 7, 3, 'IN_PLAY', 'blackKing.png', 'King');
+    var blackQueen = new Piece("blackQueen", 7, 3, 'IN_PLAY', 'blackQueen.png', 'Queen');
+    var blackKing = new Piece("blackKing", 7, 4, 'IN_PLAY', 'blackKing.png', 'King');
 
     var blackPawn1 = new Piece("blackPawn1", 6, 0, 'IN_PLAY', 'blackPawn.png', 'Pawn');
     var blackPawn2 = new Piece("blackPawn2", 6, 1, 'IN_PLAY', 'blackPawn.png', 'Pawn');
@@ -240,13 +260,14 @@ function DrawBoard() {
       y = e.clientY - canvas.offsetTop,
       //clickedSquare = Row and col
       clickedSquare = screenToBlock(x, y);
-      console.log(currTurn);
+
       //selectedPiece = go through the entire piece array and links the clickedSquare data to what piece has been clicked.
       //e.g. piece.row and col = selectedPiece.row and col
 
       //white turn
       if (currTurn == 1)
       {
+
         //selectedPiece = the selected white piece
         selectedPiece = WHITE_TEAM.find(function(piece)
         {
@@ -255,7 +276,6 @@ function DrawBoard() {
             //returns the piece name
 
             numSelectedPieces = 1;
-            socket.emit('updateWhitePieces', WHITE_TEAM);
             return piece.name;
           }
           else
@@ -317,7 +337,8 @@ function DrawBoard() {
           Render();
           currTurn = 1;
           selectedPiece = null;
-          socket.emit('updateWhitePieces', WHITE_TEAM);
+
+
         }
       }
       else if (currTurn == 0)
@@ -336,6 +357,7 @@ function DrawBoard() {
         if (checkIfFriendlyPiece(moveToField))
         {
           currTurn = 1;
+
         } //Checks for whether it is a enemy piece.
         else if (checkIfEnemyPiece(moveToField) == true)
         {
@@ -347,7 +369,9 @@ function DrawBoard() {
           currTurn = currTurn - 1;
           selectedPiece = null;
           numSelectedPieces = 0;
-          socket.emit('updateWhitePieces', WHITE_TEAM);
+          document.getElementById("teamTurn").innerHTML = black;
+          socket.emit('sendBlackTurn', black);
+
         }
         else
         { // empty square
@@ -358,7 +382,9 @@ function DrawBoard() {
           currTurn = currTurn - 1;
           selectedPiece = null;
           numSelectedPieces = 0;
-          socket.emit('updateWhitePieces', WHITE_TEAM);
+          document.getElementById("teamTurn").innerHTML = black;
+
+          socket.emit('sendCurrTurn', currTurn);
         }
       }
       else if (currTurn == 0)
@@ -366,6 +392,7 @@ function DrawBoard() {
         if (checkIfFriendlyPiece(moveToField))
         {
           currTurn = 0;
+
         } //Checks for whether it is a enemy piece.
         else if (checkIfEnemyPiece(moveToField) == true)
         {
@@ -377,6 +404,8 @@ function DrawBoard() {
           currTurn = currTurn + 1;
           selectedPiece = null;
           numSelectedPieces = 0;
+          document.getElementById("teamTurn").innerHTML = white;
+          socket.emit('sendCurrTurn', currTurn);
         }
         else
         { // empty square
@@ -387,6 +416,8 @@ function DrawBoard() {
           currTurn = currTurn + 1;
           selectedPiece = null;
           numSelectedPieces = 0;
+          document.getElementById("teamTurn").innerHTML = white;
+          socket.emit('sendCurrTurn', currTurn);
         }
       }
     }
@@ -499,7 +530,7 @@ function DrawBoard() {
 
     }
   }
-  var resetButton = document.getElementById("")
+  var resetButton = document.getElementById("");
 
   //TODO:
   // * add individual piece movement
