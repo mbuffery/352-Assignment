@@ -356,6 +356,7 @@ function DrawBoard() {
       }
       if (currTurn == 1)
       { //if it is friendly piece, call checkIfFriendlyPiece and make the currTurn = 1;
+
         if (checkIfFriendlyPiece(moveToField))
         {
           currTurn = 1;
@@ -363,24 +364,27 @@ function DrawBoard() {
         } //Checks for whether it is a enemy piece.
         else if (checkIfEnemyPiece(moveToField) == true)
         {
-
           //the selectedPiece now shares the moveToField data
           WHITE_TEAM[WHITE_TEAM.indexOf(selectedPiece)].row = moveToField.row;
           WHITE_TEAM[WHITE_TEAM.indexOf(selectedPiece)].col = moveToField.col;
           drawSquare(moveToField.col, moveToField.row);
           drawSquare(selectedField.col, selectedField.row);
           Render();
-          if(CheckForWinCondition(moveToField) == true)
+          //if the piece = piece type king, end game
+          if (CheckForWinCondition(moveToField) == true)
           {
+            //changes text to who won
+            document.getElementById("teamTurn").innerHTML = "White Wins";
+            //change endGame to true so mouseclick doesnt work
             endGame = true;
-            document.getElementById("teamTurn").innerHTML = "White Team Wins";
-            return
-          }
+          }else
+          {
+
           currTurn = currTurn - 1;
           selectedPiece = null;
           numSelectedPieces = 0;
           //document.getElementById("teamTurn").innerHTML = "black Turn";
-
+        }
         }
         else
         { // empty square
@@ -400,6 +404,7 @@ function DrawBoard() {
       }
       else if (currTurn == 0)
       { //if it is friendly piece, call checkIfFriendlyPiece and make the currTurn = 1;
+
         if (checkIfFriendlyPiece(moveToField))
         {
           currTurn = 0;
@@ -412,17 +417,21 @@ function DrawBoard() {
           drawSquare(moveToField.col, moveToField.row);
           drawSquare(selectedField.col, selectedField.row);
           Render();
-          if(CheckForWinCondition(moveToField) == true)
+          //if the piece = piece type king, end game
+          if (CheckForWinCondition(moveToField) == true)
           {
+            //changes text to who won
+            document.getElementById("teamTurn").innerHTML = "Black Wins";
+            //change endGame to true so mouseclick doesnt work
             endGame = true;
-            document.getElementById("teamTurn").innerHTML = "Black Team Wins";
-            return
-          }
+          }else
+          {
+
           currTurn = currTurn + 1;
           selectedPiece = null;
           numSelectedPieces = 0;
           //document.getElementById("teamTurn").innerHTML = "white Turn";
-
+        }
         }
         else
         { // empty square
@@ -434,7 +443,6 @@ function DrawBoard() {
           selectedPiece = null;
           numSelectedPieces = 0;
           //document.getElementById("teamTurn").innerHTML = "white Turn";
-
         }
       }
       socket.emit('updateCurrTurn', currTurn);
@@ -477,8 +485,6 @@ function DrawBoard() {
         return false;
       }
     }
-
-
   }
 
   // deletes the piece if it is used by
@@ -531,8 +537,8 @@ function DrawBoard() {
     //if white turn
     if (currTurn == 1)
     { //finds a white team piece that fits the the statement, return true otherwise return false
-      if(WHITE_TEAM.find(function(piece) {
-        if (piece.type = 'King')
+      if(BLACK_TEAM.find(function(piece) {
+        if (moveToField.row == piece.row && moveToField.col == piece.col && piece.type == "King")
         {
           console.log(piece.type);
           return true;
@@ -546,8 +552,8 @@ function DrawBoard() {
       }
     }else
     {
-      if(BLACK_TEAM.find(function(piece) {
-        if (piece.type = 'King')
+      if(WHITE_TEAM.find(function(piece) {
+        if (moveToField.row == piece.row && moveToField.col == piece.col && piece.type == "King")
         {
           return true;
         } else {
