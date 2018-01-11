@@ -257,7 +257,7 @@ function DrawBoard() {
 
   function handleClick(e) {
     //First Click
-    if (selectedPiece == null) {
+    if (selectedPiece == null && endGame == false) {
       var x = e.clientX - canvas.offsetLeft,
       y = e.clientY - canvas.offsetTop,
       //clickedSquare = Row and col
@@ -322,7 +322,7 @@ function DrawBoard() {
 
     }
     //Second Click
-    else
+    else if (endGame == false)
     {
       var x = e.clientX - canvas.offsetLeft,
       y = e.clientY - canvas.offsetTop,
@@ -334,6 +334,7 @@ function DrawBoard() {
       { //if the selectedPiece = where it will move next
         if (selectedPiece.row == moveToField.row && selectedPiece.col == moveToField.col)
         {
+
           //redraw the entire square and piece all set selelcted piece back to null
           drawSquare(moveToField.col, moveToField.row);
           Render();
@@ -351,6 +352,7 @@ function DrawBoard() {
           currTurn = 0;
           selectedPiece = null;
         }
+
       }
       if (currTurn == 1)
       { //if it is friendly piece, call checkIfFriendlyPiece and make the currTurn = 1;
@@ -361,16 +363,23 @@ function DrawBoard() {
         } //Checks for whether it is a enemy piece.
         else if (checkIfEnemyPiece(moveToField) == true)
         {
+
+          //the selectedPiece now shares the moveToField data
           WHITE_TEAM[WHITE_TEAM.indexOf(selectedPiece)].row = moveToField.row;
           WHITE_TEAM[WHITE_TEAM.indexOf(selectedPiece)].col = moveToField.col;
           drawSquare(moveToField.col, moveToField.row);
           drawSquare(selectedField.col, selectedField.row);
           Render();
+          if(CheckForWinCondition(moveToField) == true)
+          {
+            endGame = true;
+            document.getElementById("teamTurn").innerHTML = "White Team Wins";
+            return
+          }
           currTurn = currTurn - 1;
           selectedPiece = null;
           numSelectedPieces = 0;
           //document.getElementById("teamTurn").innerHTML = "black Turn";
-
 
         }
         else
@@ -379,12 +388,13 @@ function DrawBoard() {
           WHITE_TEAM[WHITE_TEAM.indexOf(selectedPiece)].col = moveToField.col;
           drawSquare(selectedField.col, selectedField.row);
           Render();
+
           currTurn = currTurn - 1;
           selectedPiece = null;
           numSelectedPieces = 0;
           //document.getElementById("teamTurn").innerHTML = "black Turn";
-
         }
+
         socket.emit('updateCurrTurn', currTurn);
         socket.emit('updateWhitePieces', WHITE_TEAM);
       }
@@ -402,6 +412,12 @@ function DrawBoard() {
           drawSquare(moveToField.col, moveToField.row);
           drawSquare(selectedField.col, selectedField.row);
           Render();
+          if(CheckForWinCondition(moveToField) == true)
+          {
+            endGame = true;
+            document.getElementById("teamTurn").innerHTML = "Black Team Wins";
+            return
+          }
           currTurn = currTurn + 1;
           selectedPiece = null;
           numSelectedPieces = 0;
@@ -510,32 +526,44 @@ function DrawBoard() {
 
 
 
-  function CheckForWinCondition (selectedPiece)
+  function CheckForWinCondition (moveToField)
   {
-    if (currTurn == 0)
+    //if white turn
+    if (currTurn == 1)
+    { //finds a white team piece that fits the the statement, return true otherwise return false
+      if(WHITE_TEAM.find(function(piece) {
+        if (piece.type = 'King')
+        {
+          console.log(piece.type);
+          return true;
+        } else {
+          return false;
+        }
+      })){
+        return true;
+      } else{
+        return false;
+      }
+    }else
     {
-      //if(WHITE_TEAM)
-    }
-    else if (currTurn == 1)
-    {
-
+      if(BLACK_TEAM.find(function(piece) {
+        if (piece.type = 'King')
+        {
+          return true;
+        } else {
+          return false;
+        }
+      })){
+        return true;
+      } else{
+        return false;
+      }
     }
   }
 
-  function canPawnMoveToBlock (selectedPiece)
-  {
-    if (currTurn == 0)
-    {
-      selectedPiece.row + 1
-    }
-    else if (currTurn == 1)
-    {
-
-    }
-  }
   //var resetButton = document.getElementById("resetButton");
 
-  function myFunction()
+  /*function myFunction()
   {
     console.log("hello");
     redraw();
@@ -550,10 +578,9 @@ function DrawBoard() {
   {
 
   }
-
+*/
 
   //TODO:
   // * add individual piece movement
-  // * Look at filter array
   // * add a win situation
-  // * setup online server
+  // * set up server with AWS
