@@ -11,10 +11,35 @@ var greySquare = '#878787',
 whiteSquare = '#ffffff'
 outLine = '#fb0006';
 
+var serverStatus = false;
+
 var blackTurn = 0,
 whiteTurn = 1,
 SELECT_LINE_WIDTH = 5,
 ROOK = 'Rook';
+
+//Linking the server with the game
+var socket = io();
+
+//First socket.on updates the turn from the Server
+socket.on('sendCurrTurn', function(data)
+{
+  if (serverStatus == true)
+  {
+    currTurn = data;
+
+    if(currTurn == 1)
+    {
+      console.log("turn data is Working!");
+    }else if (currTurn == 0)
+    {
+      console.log("black turn");
+    }
+  }
+});
+
+
+
 
 function draw() {
 
@@ -228,11 +253,13 @@ function DrawBoard() {
           if (piece.status == 'IN_PLAY' && piece.row == clickedSquare.row && piece.col == clickedSquare.col)
           {
             //returns the piece name
+
             numSelectedPieces = 1;
+            socket.emit('updateWhitePieces', WHITE_TEAM);
             return piece.name;
           }
           else
-          {
+          { //No piece selected, retuns nothing
             return null;
           }
         });
@@ -246,6 +273,7 @@ function DrawBoard() {
           if (piece.status == 'IN_PLAY' && piece.row == clickedSquare.row && piece.col == clickedSquare.col)
           {
             //returns the piece name
+
             numSelectedPieces = 1;
             return piece.name;
           }
@@ -256,11 +284,12 @@ function DrawBoard() {
         });
       }
       // end of find
-
+      //selectedField uses all clickedSquare data which is x,y(row, col)
       selectedField = clickedSquare;
-
+      //if one piece is selelcted and selectedPiece does not equal null
       if (numSelectedPieces == 1 && selectedPiece != null)
       {
+        //cretes border around the selcted piece to indicate that its been selected
         ctx.lineWidth = SELECT_LINE_WIDTH;
         ctx.strokeStyle = outLine;
         ctx.strokeRect((selectedPiece.col * BLOCK_SIZE) + SELECT_LINE_WIDTH,
@@ -288,6 +317,7 @@ function DrawBoard() {
           Render();
           currTurn = 1;
           selectedPiece = null;
+          socket.emit('updateWhitePieces', WHITE_TEAM);
         }
       }
       else if (currTurn == 0)
@@ -317,6 +347,7 @@ function DrawBoard() {
           currTurn = currTurn - 1;
           selectedPiece = null;
           numSelectedPieces = 0;
+          socket.emit('updateWhitePieces', WHITE_TEAM);
         }
         else
         { // empty square
@@ -327,6 +358,7 @@ function DrawBoard() {
           currTurn = currTurn - 1;
           selectedPiece = null;
           numSelectedPieces = 0;
+          socket.emit('updateWhitePieces', WHITE_TEAM);
         }
       }
       else if (currTurn == 0)
@@ -446,7 +478,14 @@ function DrawBoard() {
 
   function CheckForWinCondition (selectedPiece)
   {
+    if (currTurn == 0)
+    {
+      //if(WHITE_TEAM)
+    }
+    else if (currTurn == 1)
+    {
 
+    }
   }
 
   function canPawnMoveToBlock (selectedPiece)
@@ -460,6 +499,7 @@ function DrawBoard() {
 
     }
   }
+  var resetButton = document.getElementById("")
 
   //TODO:
   // * add individual piece movement

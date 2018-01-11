@@ -13,10 +13,56 @@ app.get('/', function (req, res) {
 //Reads all static files in the __dirname which is called public
 app.use(express.static(__dirname + '/Public'));
 
+//Array for amount of players connected
+var users = [];
 
+//All the variables that will need to be constantly checked and updates for the players/clients
+var WHITE_TEAM = [],
+BLACK_TEAM = [],
+currTurn = 1,
+selectedField = null,
+selectedPiece = null,
+numSelectedPieces = 0;
+
+//upon client connecting
 io.on('connection', function (socket) {
-  socket.emit('news', { hello: 'world' });
-  socket.on('my other event', function (data) {
-    console.log(data);
+  //Each user id is different by generating them a random id
+  socket.id = Math.random();
+  //Each user that connects to the server will be added into Array
+  users[socket.id] = socket;
+
+  //User will be deleted if they disconnect from server
+  socket.on('disconnect', function()
+  {
+    delete users[socket.id];
+  });
+
+  console.log('client connected ' + socket.id);
+
+  //Turn system relates back from client
+  socket.on('sendCurrTurn', function(data)
+  {
+    currTurn = data;
+  });
+  socket.on('updateBlackPieces', function(data)
+  {
+    BLACK_TEAM = data;
+  });
+  socket.on('updateWhitePieces', function(data)
+  {
+    WHITE_TEAM = data;
   });
 });
+
+
+//All data created will be sent to every client that connects to the Server
+setInterval(function()
+{
+  for(var i in users)
+{
+  var socket = users[i];
+  socket.emit('sendCurrTurn', currTurn);
+  socket.emit('updateBlackPieces', BLACK_TEAM);
+  socket.emit('updateWhitePieces', WHITE_TEAM);
+}
+},1000/10);
