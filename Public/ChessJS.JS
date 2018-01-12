@@ -24,20 +24,8 @@ socket.on('updateCurrTurn', function(data)
 
   }
 });
-/*socket.on('updateWhitePieces', function(data)
-{
-  if (serverStatus == true)
-  {
-    WHITE_TEAM = data;
 
-      if(currTurn == 1)
-      {
-        Render();
-
-      }
-  }
-});*/
-
+//gloabal variables
 var numOfCol = 8,
 numOfRow = 8,
 WHITE_TEAM = new Array(),
@@ -46,16 +34,12 @@ allPieces = new Array(),
 ctx = null,
 Board = null,
 BLOCK_SIZE = 100;
-
 var greySquare = '#878787',
 whiteSquare = '#ffffff',
 outLine = '#fb0006';
-
 var serverStatus = true,
 endGame = false,
 serverOnline = true;
-
-
 var white = "White's Turn",
 black = "Black's Turn",
 SELECT_LINE_WIDTH = 5;
@@ -218,6 +202,7 @@ function DrawBoard() {
       piece.img = new Image();
       piece.img.src = piece.imgSrc;
     });
+    //Goes through the entire array and renders the img,row(y) and collums(x);
     BLACK_TEAM.forEach(function(piece) {
       piece.img = new Image();
       piece.img.src = piece.imgSrc;
@@ -236,12 +221,14 @@ function DrawBoard() {
 
       }
     });
+    //if piece = in play, render the piece in
     BLACK_TEAM.forEach(function(piece) {
       if (piece.status == 'IN_PLAY')
       {
         piece.img.onload = function() {
           ctx.drawImage(piece.img, piece.col * BLOCK_SIZE, piece.row * BLOCK_SIZE);
         }
+        //if piece.status = dead then do not render
         allPieces.push(piece);
       } else if (piece.status == 'DEAD')
       {
@@ -249,6 +236,7 @@ function DrawBoard() {
       }
     });
   }
+  //Global Variables
   var selectedPiece = null;
   var numSelectedPieces = 0;
   var selectedField = null;
@@ -340,6 +328,7 @@ function DrawBoard() {
           Render();
           currTurn = 1;
           selectedPiece = null;
+
         }
       }
       else if (currTurn == 0)
@@ -351,6 +340,7 @@ function DrawBoard() {
           Render();
           currTurn = 0;
           selectedPiece = null;
+
         }
 
       }
@@ -383,7 +373,7 @@ function DrawBoard() {
           currTurn = currTurn - 1;
           selectedPiece = null;
           numSelectedPieces = 0;
-          //document.getElementById("teamTurn").innerHTML = "black Turn";
+          document.getElementById("teamTurn").innerHTML = "Black Turn";
         }
         }
         else
@@ -396,7 +386,7 @@ function DrawBoard() {
           currTurn = currTurn - 1;
           selectedPiece = null;
           numSelectedPieces = 0;
-          //document.getElementById("teamTurn").innerHTML = "black Turn";
+          document.getElementById("teamTurn").innerHTML = "Black Turn";
         }
 
         socket.emit('updateCurrTurn', currTurn);
@@ -426,11 +416,10 @@ function DrawBoard() {
             endGame = true;
           }else
           {
-
           currTurn = currTurn + 1;
           selectedPiece = null;
           numSelectedPieces = 0;
-          //document.getElementById("teamTurn").innerHTML = "white Turn";
+          document.getElementById("teamTurn").innerHTML = "White's Turn";
         }
         }
         else
@@ -442,7 +431,7 @@ function DrawBoard() {
           currTurn = currTurn + 1;
           selectedPiece = null;
           numSelectedPieces = 0;
-          //document.getElementById("teamTurn").innerHTML = "white Turn";
+          document.getElementById("teamTurn").innerHTML = "White's Turn";
         }
       }
       socket.emit('updateCurrTurn', currTurn);
@@ -552,6 +541,7 @@ function DrawBoard() {
       }
     }else
     {
+      //finds a white team piece that fits the the statement, return true otherwise return false
       if(WHITE_TEAM.find(function(piece) {
         if (moveToField.row == piece.row && moveToField.col == piece.col && piece.type == "King")
         {
@@ -566,27 +556,3 @@ function DrawBoard() {
       }
     }
   }
-
-  //var resetButton = document.getElementById("resetButton");
-
-  /*function myFunction()
-  {
-    console.log("hello");
-    redraw();
-    draw();
-    selectedPiece = null;
-    numSelectedPieces = 0;
-    selectedField = null;
-    currTurn = 1;
-
-  }
-  function redraw()
-  {
-
-  }
-*/
-
-  //TODO:
-  // * add individual piece movement
-  // * add a win situation
-  // * set up server with AWS
